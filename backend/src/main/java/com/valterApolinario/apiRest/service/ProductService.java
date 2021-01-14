@@ -1,6 +1,5 @@
 package com.valterApolinario.apiRest.service;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.valterApolinario.apiRest.dao.ProductDao;
 import com.valterApolinario.apiRest.dto.ProductDto;
+import com.valterApolinario.apiRest.exception.ObjectNotFoundException;
+import com.valterApolinario.apiRest.mapper.ProductMapper;
 import com.valterApolinario.apiRest.model.Product;
+import com.valterApolinario.apiRest.util.ErrorMessagesEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,25 +21,22 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
 
 	private final ProductDao dao;
-	
-	
-
 
 	public Page<ProductDto> findAllProducts(final Pageable page) {
 		return dao.findAll(page).map(this::parseModelToDto);
 	}
 
-	public Page<ProductDto> findOneProduct(final Pageable page , final Long id) {
-		
+	public Page<ProductDto> findOneProduct(final Pageable page, final Long id) {
+
 		return dao.findById(page, id).map(this::parseModelToDto);
 	}
-	
-	public Page<ProductDto>findProduct(Pageable page, Long id){
+
+	public Page<ProductDto> findProduct(Pageable page, Long id) {
 		return (id == null) ? findAllProducts(page) : findOneProduct(page, id);
 	}
 
-	public Product saveProduct(Product entity) {
-		return dao.save(entity);
+	public ProductDto saveProduct(ProductDto dto) {
+		return parseModelToDto(dao.save(parseDtoToModel(dto)));
 	}
 
 	public Product updateProduct(final Long id, final Product entity) {
@@ -46,19 +45,22 @@ public class ProductService {
 	}
 
 	public void deleteProduct(Long id) {
-		dao.deleteById(id);
+		if (isExistsProduct(id)) {
+			dao.deleteById(id);
+		} else {
+			throw new ObjectNotFoundException(ErrorMessagesEnum.PRODUCT_NOT_FOUND.getMessage());
+		}
 
 	}
 
 	private Product parseDtoToModel(final ProductDto dto) {
-		return Product.builder().id(dto.getId()).name(dto.getName()).price(dto.getPrice()).lastUpdateDate(null)
-				.creationDate(null).build();
+		return Product.builder().id(dto.getId()).name(dto.getName()).price(dto.getPrice()).build();
 
 	}
 
 	private ProductDto parseModelToDto(final Product product) {
 		return ProductDto.builder().id(product.getId()).name(product.getName()).Description(product.getDescription())
-				.creationDate(null).lastUpdateDate(null).build();
+				.creationDate(product.getCreationDate()).lastUpdateDate(product.getLastUpdateDate()).build();
 	}
 
 	private List<Product> parseDtoListToModelList(final List<ProductDto> productsDto) {
@@ -68,7 +70,7 @@ public class ProductService {
 	private List<ProductDto> parseModelListToDtoList(final List<Product> products) {
 		return products.stream().map(product -> parseModelToDto(product)).collect(Collectors.toList());
 	}
-	
+
 	private Boolean isExistsProduct(Long id) {
 		return dao.existsById(id);
 	}

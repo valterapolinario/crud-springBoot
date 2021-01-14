@@ -39,19 +39,14 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Product> saveProduct(@RequestBody final Product objectProduct) {
-		return ResponseEntity.ok(service.saveProduct(objectProduct));
+	public ResponseEntity<ProductDto> saveNewProduct(@RequestBody final ProductDto objectProductDto) {
+		return ResponseEntity.ok(service.saveProduct(objectProductDto));
 	}
-
-	/*
-	 * @GetMapping("/{id}") public ResponseEntity<ProductDto>
-	 * findOneProduct(@PathVariable("id") final Long id) { return
-	 * ResponseEntity.ok(service.findOneProduct(id)); }
-	 */
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Product> updateProduct(@PathVariable("id") final Long id,
 			@RequestBody final Product objectProduct) {
+		
 
 		return ResponseEntity.ok(service.updateProduct(id, objectProduct));
 

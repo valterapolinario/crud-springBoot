@@ -1,11 +1,11 @@
 package com.valterApolinario.apiRest.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Builder
@@ -15,6 +15,8 @@ public class ProductDto {
 	private String name;
 	private Double price;
 	private String Description;
-	private LocalDate creationDate;
-	private LocalDate lastUpdateDate;
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "UTF-8")
+	private LocalDateTime creationDate;
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "UTF-8")
+	private LocalDateTime lastUpdateDate;
 }

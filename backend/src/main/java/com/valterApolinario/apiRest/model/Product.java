@@ -37,7 +37,7 @@ public class Product {
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm", timezone = "UTF-8")
-	@LastModifiedDate
+	@UpdateTimestamp
 	private LocalDateTime lastUpdateDate;
 
 }
