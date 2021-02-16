@@ -63,8 +63,8 @@ public class ProductService {
 				.id(dto.getId())
 				.name(dto.getName())
 				.price(dto.getPrice())
-				.creationDate(dto.getCreationDate())
 				.Description(dto.getDescription())
+				.creationDate(dto.getCreationDate())
 				.build();
 
 	}
@@ -73,7 +73,7 @@ public class ProductService {
 		return ProductDto.builder()
 				.id(product.getId())
 				.name(product.getName())
-				.Description(product.getDescription())
+				.Description(product.getDescription()) 
 				.price(product.getPrice())
 				.creationDate(product.getCreationDate())
 				.lastUpdateDate(product.getLastUpdateDate())
