@@ -3,9 +3,6 @@ package com.valterApolinario.apiRest.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.valterApolinario.apiRest.dto.ProductDto;
 import com.valterApolinario.apiRest.model.Product;

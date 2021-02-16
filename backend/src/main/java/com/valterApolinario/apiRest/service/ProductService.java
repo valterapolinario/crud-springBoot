@@ -1,7 +1,7 @@
 package com.valterApolinario.apiRest.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +22,7 @@ public class ProductService {
 
 	private final ProductDao dao;
 
+
 	public Page<ProductDto> findAllProducts(final Pageable page) {
 		return dao.findAll(page).map(this::parseModelToDto);
 	}
@@ -39,9 +40,13 @@ public class ProductService {
 		return parseModelToDto(dao.save(parseDtoToModel(dto)));
 	}
 
-	public Product updateProduct(final Long id, final Product entity) {
-		entity.setId(id);
-		return dao.save(entity);
+	public ProductDto updateProduct(final Long id, final ProductDto dto) {
+
+		final Optional<Product> entity = dao.findById(id);
+		dto.setId(id);
+		dto.setCreationDate(entity.get().getCreationDate());
+		;
+		return parseModelToDto(dao.save(parseDtoToModel(dto)));
 	}
 
 	public void deleteProduct(Long id) {
@@ -54,22 +59,36 @@ public class ProductService {
 	}
 
 	private Product parseDtoToModel(final ProductDto dto) {
-		return Product.builder().id(dto.getId()).name(dto.getName()).price(dto.getPrice()).build();
+		return Product.builder()
+				.id(dto.getId())
+				.name(dto.getName())
+				.price(dto.getPrice())
+				.creationDate(dto.getCreationDate())
+				.Description(dto.getDescription())
+				.build();
 
 	}
 
 	private ProductDto parseModelToDto(final Product product) {
-		return ProductDto.builder().id(product.getId()).name(product.getName()).Description(product.getDescription())
-				.creationDate(product.getCreationDate()).lastUpdateDate(product.getLastUpdateDate()).build();
+		return ProductDto.builder()
+				.id(product.getId())
+				.name(product.getName())
+				.Description(product.getDescription())
+				.price(product.getPrice())
+				.creationDate(product.getCreationDate())
+				.lastUpdateDate(product.getLastUpdateDate())
+				.build();
 	}
 
-	private List<Product> parseDtoListToModelList(final List<ProductDto> productsDto) {
-		return productsDto.stream().map(product -> parseDtoToModel(product)).collect(Collectors.toList());
-	}
-
-	private List<ProductDto> parseModelListToDtoList(final List<Product> products) {
-		return products.stream().map(product -> parseModelToDto(product)).collect(Collectors.toList());
-	}
+	/*
+	 * private List<Product> parseDtoListToModelList(final List<ProductDto>
+	 * productsDto) { return productsDto.stream().map(product ->
+	 * parseDtoToModel(product)).collect(Collectors.toList()); }
+	 * 
+	 * private List<ProductDto> parseModelListToDtoList(final List<Product>
+	 * products) { return products.stream().map(product ->
+	 * parseModelToDto(product)).collect(Collectors.toList()); }
+	 */
 
 	private Boolean isExistsProduct(Long id) {
 		return dao.existsById(id);
