@@ -35,4 +35,13 @@ public class ResourceExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
+	
+	@ExceptionHandler(InvalidJwtAuthenticationException.class)
+	public ResponseEntity<StandardError> invalidJwtAuthenticationException(InvalidJwtAuthenticationException e, HttpServletRequest request) {
+
+		StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+
+	}
 }
