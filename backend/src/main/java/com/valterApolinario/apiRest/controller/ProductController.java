@@ -26,7 +26,7 @@ import lombok.Data;
 
 @Data
 @RestController
-@RequestMapping(value = "/product")
+@RequestMapping(value = "/api/product")
 public class ProductController {
 
 

@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name = "tb_product")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
